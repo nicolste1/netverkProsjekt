@@ -1,0 +1,7 @@
+Et nevralt netverk består av nurons og vektete summer.
+Hvordan det kan sendes inn er først ha en input layer som beskriver input feks, hvor sterk pikselstyrke mellom 0-1
+på alle piksler, deretter har man vektete sammenkoblinger mellom hver nevron og nevron i det neste 
+layer. I tilleg har man en bias i hver vektete sum. 
+Dette kan skrives som en matriseligning der vektene mellom hvert nevron står i en matrise, videre har man en 
+vektor med aktiveringen av nevronene i input layer(0-1) ogsåp plusser man på en vektor med bias, og resulatat 
+blir aktivering av output etter sigmoid.
