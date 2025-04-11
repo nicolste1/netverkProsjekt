@@ -24,6 +24,7 @@ class Matrix2{
         const int getRows(){return rows; }
         const int getColums(){return colums; }
         friend std::ostream& operator<<(std::ostream& os, const Matrix2& rhs);
+        friend std::istream& operator >>(std::istream& is,Matrix2& rhs);
         Matrix2 operator *(const Matrix2& rhs) const;
         Matrix2& operator *(double d);
         bool operator ==(const Matrix2& rhs);

@@ -33,6 +33,57 @@ NetworkFast::NetworkFast(std::vector<int> inNeurovec, Matrix2 inInputLayer) : ne
 
 }
 
+NetworkFast::NetworkFast(std::vector<int> inNeurovec): neurovec(inNeurovec)
+{
+    numLayers = neurovec.size();
+    inputLayer = Matrix2(neurovec.at(0),1);
+    Matrix2(neurovec[numLayers-1],1);
+    outLayer = Matrix2(neurovec[numLayers-1],1);
+    //Lage random matriser
+    //lage random biaser
+    for(int i = 1; i < numLayers; i++){
+        Matrix2 addLayer(neurovec.at(i), neurovec.at(i-1));
+        addLayer.setXavierValues(neurovec.at(i-1), neurovec.at(i));
+        layers.push_back(addLayer);
+
+        Matrix2 addBias(neurovec.at(i),1);
+        addBias.setRandomValues();
+        biases.push_back(addBias);
+    }
+
+}
+
+
+NetworkFast::NetworkFast(const std::string& filename){
+    std::ifstream inFile(filename);
+    if (!inFile) {
+        throw std::runtime_error("Kunne ikke åpne fil: " + filename);
+    }
+    std::string forsteLinje;
+    inFile >> forsteLinje;
+    inFile >> neurovec;
+
+    numLayers = neurovec.size();
+    inputLayer = Matrix2(neurovec.at(0),1);
+    Matrix2(neurovec[numLayers-1],1);
+    outLayer = Matrix2(neurovec.at(numLayers-1),1);
+    
+    for(int i = 1; i < numLayers; i++){
+        Matrix2 addLayer(neurovec.at(i), neurovec.at(i-1));
+        inFile >> addLayer;
+        layers.push_back(addLayer);
+    }
+
+    for(int i = 1; i < numLayers; i++){
+        Matrix2 addBias(neurovec.at(i),1);
+        inFile >> addBias;
+        biases.push_back(addBias);
+    }
+}
+
+    
+
+
 
 //medlemsfunksjoner___________________________________________________________________________________________
 
@@ -43,6 +94,15 @@ void NetworkFast::feedforward(){
         inputLayer.applyActivationFunc("sigmoid");
     }
     outLayer = inputLayer;
+}
+
+int NetworkFast::feedforward(std::vector<double> inVec){
+    inputLayer = Matrix2(inVec);
+    for (int i = 0; i < numLayers - 1; i++){
+        inputLayer = layers[i] * inputLayer + biases[i];
+        inputLayer.applyActivationFunc("sigmoid");
+    }
+    return inputLayer.argMax();
 }
 
 void NetworkFast::applySGD(std::vector <std::tuple<Matrix2, Matrix2>> trainData, int numEpocks, int miniBatchSize, double learnRate, std::vector <std::tuple<Matrix2, Matrix2>> testData){
@@ -176,3 +236,20 @@ void NetworkFast::evaluate(std::vector<std::tuple<Matrix2,Matrix2>> testData){
     }
     std::cout << " " << (static_cast<double>(numRight) / testData.size()) * 100.0 << " prosent riktige" << std::endl;
 }
+
+void NetworkFast::saveNetworkToFile(const std::string& filename){
+    std::ofstream outFile(filename);
+    // lagre std::vector<int> neurovec;
+    outFile << "neurovec:" << std::endl;
+    outFile << neurovec;
+    outFile << 'n' << std::endl;
+    outFile << layers;
+    outFile << biases;
+    //lagre std::vector<Matrix2> layers og std::vector<Matrix2> biases;
+}
+
+void NetworkFast::printNetworkToTerminal(){
+    std::cout << "neurovec: \n" << neurovec << "\n Wheights: \n" << layers << "\n Biases: \n" << biases;
+    //lagre std::vector<Matrix2> layers og std::vector<Matrix2> biases;
+}
+

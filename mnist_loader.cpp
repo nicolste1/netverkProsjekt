@@ -41,7 +41,7 @@ MNISTData load_mnist_images_and_labels(const std::string& image_file, const std:
         for (uint32_t j = 0; j < rows * cols; ++j) {
             unsigned char pixel;
             imageStream.read((char*)&pixel, 1);
-            img[j] = pixel / 255.0;  // Normaliser
+            img[j] = (pixel != 0) ? 1.0 : 0.0;
         }
         data.images.push_back(img);
     }
@@ -88,12 +88,10 @@ void runMNIST(std::string name) {
         std::vector<int> inputVector = {784,24,12,10};
         Matrix2 inputLayer = std::get<0> (trainData.at(0));
         NetworkFast net(inputVector,inputLayer);
-        std::cout << " outlayer before sgd: " << std::endl;
-        net.feedforward();
-        std::cout << net.getOutLayer();
-        net.applySGD(trainData, 10, 10, 3.0, testData);
-        std::cout << " outlayer after sgd: " << std::endl;
-        std::cout << net.getOutLayer();
+        std::cout << "Before SGD: " << std::endl;
+        net.evaluate(testData);
+        net.applySGD(trainData, 1, 10, 1.0, testData);
+        net.saveNetworkToFile("VisuelMNISTfile.txt");
     }
     else{
         std::cout<< "Du må gi inn navnet på hvilket netverk du vil bruke (network) eller (networkFast) " << std::endl;
@@ -140,4 +138,27 @@ std::vector<std::tuple<Matrix2, Matrix2>> toMatrix2Dataset(
         dataset.emplace_back(Matrix2(images[i]), Matrix2(labels[i]));
     }
     return dataset;
+}
+
+std::vector<std::tuple<std::vector<double>, double>> returnTestVector(int antPic){
+    MNISTData test = load_mnist_images_and_labels("t10k-images-idx3-ubyte", "t10k-labels-idx1-ubyte");
+    auto testLabelsVec = one_hot_encode_labels(test.labels, 10);
+    std::vector<std::tuple<std::vector<double>, double>> dataset;
+    for (size_t i = 0; i < antPic; ++i) {
+        double maxElement = argMax(testLabelsVec.at(i));
+        dataset.emplace_back(test.images.at(i), maxElement);
+    }
+    return dataset;
+}
+
+int argMax(const std::vector<double>& vec){
+    double localBiggest = vec.at(0);
+    int out = 0;
+    for(size_t i = 1; i < vec.size(); i++){
+        if(vec.at(i) > localBiggest){
+            localBiggest = vec.at(i);
+            out = i;
+        }
+    }
+    return out;
 }

@@ -7,6 +7,9 @@
 #include <networkFast.h>
 //ChatGPT kode for å gjøre mnist data om til vectorform som kan enkelt gjøres om til matriser
 
+int argMax(const std::vector<double>& vec);
+std::vector<std::tuple<std::vector<double>, double>> returnTestVector(int antPic);
+
 
 struct MNISTData {
     std::vector<std::vector<double>> images;

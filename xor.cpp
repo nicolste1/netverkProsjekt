@@ -52,7 +52,10 @@ void testXor(std::string name){
             Matrix2 output(outputVec); // 2x1 output-matrise
             xorData.push_back({input, output});
         }
-        net.applySGD(xorData, 1000, 4, 1.0, xorData);
+        //net.applySGD(xorData, 1000, 4, 1.0, xorData);
+        net.saveNetworkToFile("XorToFile.txt");
+        NetworkFast net2("XorToFile.txt");
+        net2.printNetworkToTerminal();
     }
     else{
         std::cout << "Du må gi inn navnet på hvilket netverk du vil bruke (network) eller (networkFast) " << std::endl;

@@ -34,6 +34,7 @@ exe = executable(
 'mnist_loader.cpp',
 'network.cpp',
 'networkFast.cpp',
+'visuelMnist.cpp',
 'xor.cpp',
   dependencies : [animationwindow_dep, sdl2_dep, std_lib_facilities_dep],
   cpp_args : compiler_flags

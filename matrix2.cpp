@@ -149,6 +149,18 @@ std::ostream& operator<<(std::ostream& os, const Matrix2& rhs){
 }
 
 
+std::istream& operator >>(std::istream& is, Matrix2& rhs){
+    for(int row = 0; row < rhs.rows; row++){
+        for(int colum = 0; colum < rhs.colums; colum++){
+            double element;
+            is >> element;
+            rhs.matrix.at(row * rhs.colums + colum) = element;
+        }
+    }
+    return is;
+}
+
+
 Matrix2 Matrix2::operator *(const Matrix2& rhs) const{ //Matrise ganger vector 
     if (rhs.rows != this->colums) {
         throw std::invalid_argument("Matrisemultiplikasjon går ikke da kolonner samsvarer ikke med antall rader");
