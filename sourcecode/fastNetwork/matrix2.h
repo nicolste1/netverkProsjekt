@@ -13,6 +13,7 @@ class Matrix2{
         Matrix2(const Matrix2& rhs);
         Matrix2(const std::vector<std::vector<double>>& doubleVec);
         Matrix2(const std::vector<double>& Vec);
+        Matrix2(const double& dub);
         void applyActivationFunc(std::string name);
         void sigmoidPrime();
         void setRandomValues();
@@ -21,8 +22,8 @@ class Matrix2{
         void roundedOutput();
         int argMax() const;
         Matrix2 transpose() const;
-        const int getRows(){return rows; }
-        const int getColums(){return colums; }
+        int getRows(){return rows; }
+        int getColums(){return colums; }
         friend std::ostream& operator<<(std::ostream& os, const Matrix2& rhs);
         friend std::istream& operator >>(std::istream& is,Matrix2& rhs);
         Matrix2 operator *(const Matrix2& rhs) const;

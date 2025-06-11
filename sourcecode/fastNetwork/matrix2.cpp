@@ -1,4 +1,4 @@
-#include <matrix2.h>
+#include "matrix2.h"
 #include <cassert>
 #include <random>
 
@@ -6,7 +6,6 @@
 
 Matrix2::Matrix2(int nrows, int ncolums) : rows(nrows) , colums(ncolums), matrix(nrows *ncolums, 0.0){
     assert(rows > 0 && colums > 0);
-
 }
 
 Matrix2::Matrix2() : rows(0), colums(0) {
@@ -24,11 +23,27 @@ Matrix2::Matrix2(const std::vector<double>& Vec) : rows(Vec.size()), colums(1){
     matrix = Vec;
 }
 
+Matrix2::Matrix2(const double& dub): rows(10), colums(1), matrix(rows *colums, 0.0){
+    for(int i = 0; i < rows; i++){
+        if(dub == i){
+            matrix.at(i) = 1;
+        }
+    }
+}
+
 //Kopikonstruktør 
 Matrix2::Matrix2(const Matrix2& rhs) : colums(rhs.colums), rows(rhs.rows){
     matrix = rhs.matrix;
 }
+
+
 //Medlemsfunskjoner________________________________________________________________
+void Matrix2::setValue(double value){
+    for(int i = 0; i < rows * colums; i++){
+        matrix.at(i) = value;
+    }
+}
+
 
 Matrix2 Matrix2::transpose() const{
     Matrix2 out(this->colums, this->rows);
@@ -40,6 +55,7 @@ Matrix2 Matrix2::transpose() const{
     }
     return out;
 }
+
 void Matrix2::setRandomValues(){
     std::random_device rd;
     std::mt19937 gen(rd()); 
@@ -60,7 +76,6 @@ void Matrix2::setXavierValues(int dimIn, int dimOut){
         matrix.at(i) = random;
     }
 }
-
 
 
 void Matrix2::applyActivationFunc(std::string name){
@@ -200,8 +215,7 @@ Matrix2& Matrix2::hademart(const Matrix2& rhs){
     return *this;
 }
 
-//Utifra network kode kunne man implementert + til å returnere referanse og ikke lake kopi, 
-//men dette bryter med standard så ikke implementert, og unødvendig da RVO fikser 
+
 Matrix2 Matrix2::operator + (const Matrix2& rhs) const{
     if (rhs.rows != this->rows || rhs.colums != this->colums) {
         throw std::invalid_argument("Matrisene er ikke av samme størelse og kan derfor ikke adderes sammen");
@@ -250,12 +264,7 @@ bool Matrix2::operator ==(const Matrix2& rhs){
     }
     return true;
 }
-//Ikke essensielle funksjoner i bruk for test____________________________________
-void Matrix2::setValue(double value){
-    for(int i = 0; i < rows * colums; i++){
-        matrix.at(i) = value;
-    }
-}
+
 
 
 

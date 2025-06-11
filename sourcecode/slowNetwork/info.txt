@@ -1,0 +1,5 @@
+Dette er førsteutkast av netverket og er den strukturen det raske netverket bruker.
+Netverket bruker 2D array, noe som øker tid på utregninger betraktlig
+Netverket håndeterer også egen minne alokasjon noe som gjør at std::vector optimalisering 
+ikke er med. 
+

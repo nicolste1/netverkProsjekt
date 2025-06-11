@@ -1,5 +1,6 @@
 #pragma once
-#include <matrix2.h>
+#include "matrix2.h"
+#include "dataPath.h"
 #include <vector>
 #include <tuple>
 #include <fstream>
@@ -17,13 +18,13 @@ class NetworkFast{
         std::vector<Matrix2> makeEmptyBiases();
         void updateMiniBatch(std::vector<std::tuple<Matrix2,Matrix2>> miniBatch,double learnRate);
         void backProp(std::tuple<Matrix2,Matrix2> example,std::vector<Matrix2>& gradientLayers, std::vector<Matrix2>& gradientBiases);
-        void backProp2(std::tuple<Matrix2,Matrix2> example,std::vector<Matrix2>& gradientLayers, std::vector<Matrix2>& gradientBiases);
     public:
         Matrix2 getInputLayer(){ return inputLayer; }
         Matrix2 getOutLayer(){ return outLayer; }
         NetworkFast(std::vector<int> inNeurovec, Matrix2 inputLayer);
         NetworkFast(std::vector<int> inNeurovec);
-        NetworkFast(const std::string& filename);
+        NetworkFast(std::string& filename);
+        NetworkFast();
         void applySGD(std::vector <std::tuple<Matrix2, Matrix2>> trainData, int numEpocks, int miniBatchSize, double learnRate, std::vector <std::tuple<Matrix2, Matrix2>> testData); //stochastic gradient decent 
         void feedforward();
         int feedforward(std::vector<double> inVec);

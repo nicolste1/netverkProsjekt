@@ -1,4 +1,4 @@
-#include <networkFast.h>
+#include "networkFast.h"
 #include <math.h> //Sigmoid
 #include <algorithm> // shuffle vector, 
 #include <random>
@@ -53,12 +53,12 @@ NetworkFast::NetworkFast(std::vector<int> inNeurovec): neurovec(inNeurovec)
 
 }
 
+NetworkFast::NetworkFast(): 
+    neurovec{}, inputLayer{}, outLayer{}, numLayers{0}, layers{}, biases{} {}
 
-NetworkFast::NetworkFast(const std::string& filename){
+NetworkFast::NetworkFast(std::string& filename){
+    filename = fileExist(filename);
     std::ifstream inFile(filename);
-    if (!inFile) {
-        throw std::runtime_error("Kunne ikke åpne fil: " + filename);
-    }
     std::string forsteLinje;
     inFile >> forsteLinje;
     inFile >> neurovec;
@@ -129,49 +129,16 @@ void NetworkFast::updateMiniBatch(std::vector<std::tuple<Matrix2,Matrix2>> miniB
 
     //For hvert treningseksempel kjør backprop og opptater gradient c
     for(std::tuple<Matrix2,Matrix2> example: miniBatch){
-        backProp2(example, gradientLayers,gradientBiases);
+        backProp(example, gradientLayers,gradientBiases);
     }
     //Opptater biases og layers med gradient
     for(int i = 0; i < numLayers - 1; i++){
-        //std::cout << "layers at " << i << std::endl << this->layers.at(i)  << "gradienlayers at " << i << std::endl << gradientLayers.at(i) * (learnRate/miniBatch.size()) << std::endl;
         this->layers.at(i) = this->layers.at(i) - gradientLayers.at(i) * (learnRate/miniBatch.size());
         this->biases.at(i) = this->biases.at(i) - gradientBiases.at(i) * (learnRate/miniBatch.size());
     }
 }
 
-void NetworkFast::backProp(std::tuple<Matrix2,Matrix2> example,std::vector<Matrix2>& gradientLayers, std::vector<Matrix2>& gradientBiases)
-{
-    //opptater gradientLayers og Biases
-    std::vector<Matrix2> deltaGradientLayers = makeEmptyLayers();
-    std::vector<Matrix2> deltaGradientBiases = makeEmptyBiases();
-    Matrix2 a1 = std::get<0>(example);
-    std::vector<Matrix2> activations = {a1};
-    Matrix2 emtyMatrix2;
-    std::vector<Matrix2> z = {emtyMatrix2};
-    Matrix2 outError; 
-    //feedforward 
-    for(int layer = 1; layer < numLayers; layer++){
-        Matrix2 zl = layers.at(layer) * activations.at(layer-1) + biases.at(layer);
-        z.push_back(zl);
-        zl.applyActivationFunc("sigmoid");
-        activations.push_back(zl);
-    }
-    //backProp
-    Matrix2 dcOut = activations.at(numLayers-1) - std::get<1>(example);
-    Matrix2 sigmoidPrime = z.at(numLayers-1);
-    sigmoidPrime.sigmoidPrime(); //Mulighet for å bruke activations.at rett inn i sigPrime
-    outError = (dcOut.hademart(sigmoidPrime));
-    gradientBiases.at(numLayers-2) = gradientBiases.at(numLayers-2) + outError; 
-    gradientLayers.at(numLayers-2) = gradientLayers.at(numLayers-2) + activations.at(numLayers - 2) * outError;
-    for(int layer = numLayers-3; layer >= 0; layer--){
-        Matrix2 sigmoidPrime = z.at(layer + 1);
-        outError = (layers.at(layer + 1).transpose() * outError).hademart(sigmoidPrime);
-        gradientBiases.at(layer) = gradientBiases.at(layer) + outError;
-        gradientLayers.at(layer) = gradientLayers.at(layer) + activations.at(layer) * outError;
-    } 
-}
-
-void NetworkFast::backProp2(std::tuple<Matrix2,Matrix2> example,std::vector<Matrix2>& gradientLayers, std::vector<Matrix2>& gradientBiases){
+void NetworkFast::backProp(std::tuple<Matrix2,Matrix2> example,std::vector<Matrix2>& gradientLayers, std::vector<Matrix2>& gradientBiases){
     //opptater gradientLayers og Biases
     std::vector<Matrix2> deltaGradientLayers = makeEmptyLayers();
     std::vector<Matrix2> deltaGradientBiases = makeEmptyBiases();
@@ -210,6 +177,7 @@ std::vector<Matrix2> NetworkFast::makeEmptyLayers(){
     }
     return zeroLayers;
 }
+
 std::vector<Matrix2> NetworkFast::makeEmptyBiases(){
     std::vector<Matrix2> zeroBiases;
     for(int i = 1; i < numLayers; i++){
@@ -231,8 +199,7 @@ void NetworkFast::evaluate(std::vector<std::tuple<Matrix2,Matrix2>> testData){
         if(predicted == actual)
         {
             numRight++;
-        }
-        //std::cout << "predicted:  " << std::endl << outLayer << "actual: " << std::get<1>(test) << std::endl;   
+        }   
     }
     std::cout << " " << (static_cast<double>(numRight) / testData.size()) * 100.0 << " prosent riktige" << std::endl;
 }

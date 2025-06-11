@@ -21,8 +21,8 @@ class Matrix{
         void roundedOutput();
         int argMax();
         Matrix transpose() const;
-        const int getRows(){return rows; }
-        const int getColums(){return colums; }
+        int getRows(){return rows; }
+        int getColums(){return colums; }
         friend std::ostream& operator<<(std::ostream& os, const Matrix& rhs);
         Matrix operator *(const Matrix& rhs);
         Matrix operator *(double d);

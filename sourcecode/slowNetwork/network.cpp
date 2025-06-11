@@ -1,4 +1,4 @@
-#include <network.h>
+#include "network.h"
 #include <math.h> //Sigmoid
 #include <algorithm> // shuffle vector, 
 #include <random>

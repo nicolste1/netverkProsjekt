@@ -2,15 +2,26 @@
 #include <vector>
 #include <string>
 #include <cstdint>
-#include <matrix.h>
-#include <network.h>
-#include <networkFast.h>
-//ChatGPT kode for å gjøre mnist data om til vectorform som kan enkelt gjøres om til matriser
+
+#include "slowNetwork/network.h"
+#include "fastNetwork/networkFast.h"
+
+extern const int PixelwidthDraw;
+extern const int PixelheightDraw;
+extern const int sideBarWidth;
+extern const int sideBarPadding;
+extern const int heightPadding;
+extern const int titleBarHeight;
+extern const int fontTitle;
+extern const int fontGuess;
+extern const int width;
+extern const int height;
+extern const int MNISTsize;
 
 int argMax(const std::vector<double>& vec);
 std::vector<std::tuple<std::vector<double>, double>> returnTestVector(int antPic);
 
-
+ 
 struct MNISTData {
     std::vector<std::vector<double>> images;
     std::vector<uint8_t> labels;
@@ -35,3 +46,11 @@ std::vector<std::tuple<Matrix2, Matrix2>> toMatrix2Dataset(
     const std::vector<std::vector<double>>& labels,
     int antPic
 );
+
+void updatePersonalNet(NetworkFast &net, std::vector<std::tuple<std::vector<double>, double>> PersonalTrainData, int numEpocks = 1, int miniBatchSize = 10, double learnRate = 1.0);
+
+void oversample(std::vector<std::tuple<std::vector<double>, double>>& vec, int numDuplicate);
+
+
+std::vector<double> moveLeftRight(const std::vector<double>& inVec, std::string moveDir);
+bool checkIfColumClear(const std::vector<double>& inVec, int colum);
