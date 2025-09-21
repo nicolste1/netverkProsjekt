@@ -1,4 +1,4 @@
-# Nevralt Netverk for MNIST data
+# Nevralt Nettverk for MNIST data
 
 
 # Bakgrunn
