@@ -2,12 +2,11 @@
 
 
 # Bakgrunn
-Prosjekt oppgave i TDT4102 objektorientert programering på NTNU. Prosjektet er laget i C++ i den hensikt av å utvikle kunnskap om nevrale netverk og
-bygger på kode og kunnskap fra Michael Nielsen bok "Introduces neural networks and deep learning": https://goo.gl/Zmczdy, samt videoer fra 3blue1brow om deep Learning. 
+Prosjekt oppgave i TDT4102 objektorientert programering på NTNU. Prosjektet er laget i C++ i den hensikt av å utvikle kunnskap om nevrale netverk. Det nevrale nettverket er bygd fra bunnen og bygger på kode lært i faget, kode og kunnskap fra Michael Nielsen bok "Introduces neural networks and deep learning": https://goo.gl/Zmczdy, samt videoer fra 3blue1brow om deep Learning. 
 
 # Intro
 Første del av prosjektet ble laget med 2D matriser(slowNetwork) noe som er grunnlaget for nettverket, videre er netverket blitt optimlaisert med 1D matriser (fastNetwork).
-Hovedfunksjon til netverket er å klassifisere håndskrevne sifre fra MNIST der funksjon kommer fram i GUI bygget med SDL.
+Hovedfunksjon til netverket er å klassifisere håndskrevne sifre fra MNIST.
 
 # Innhold
 - `sourcecode/fastNetwork/`: Optimalisert nettverk med tilhørende matriseimplementasjon.
